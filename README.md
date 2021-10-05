@@ -10,7 +10,7 @@ You can have a detailed list of possible options by typing `masto_bot --help`, `
 
 ## Dictionaries
 
-You can either write full sentences by starting the line with `**` like : `**I'm feelings good today` or simply type a word per line.
+You can either write full sentences by starting the line with `**` like : `**I'm feelings good today` or simply type a word per line to which masto_bot will append the configured word.
 
 ## Features
 
@@ -19,7 +19,7 @@ Here are the current feature ~~and upcoming ones~~. This is going to change with
 - CLI interface with different commands
 - Reading config files and parsing them
 - Reading the dictionary
-- ~~Selecting a random sentence in the dictionary and adding a custom word~~
+- Selecting a random sentence in the dictionary and adding a custom word
 - ~~Register to a mastodon instance and saving the tokens into the config file~~
 - ~~Login on a registered account~~
 - ~~Post a generated sentence~~
