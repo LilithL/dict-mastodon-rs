@@ -1,0 +1,10 @@
+mastodon:
+  usercred: SuperSecretCredential
+  clientcred: SuperSecretCredential
+  url: https://example.com
+
+wordnik:
+  api_token: qsolhd
+;lkqds
+  I Break here because i'm
+bad formated yaml

@@ -1,0 +1,12 @@
+mastodon:
+  client_id: SuperSecretToken
+  client_secret: SuperSecretToken
+  token: SuperSecretToken
+  base: https://example.com
+  redirect: https://example.com/redirect
+
+wordnik:
+  api_token: false
+
+local_dictionary: ./tests/assets/dictionary.txt
+appended_word: myWord

@@ -1,0 +1,9 @@
+# Tools
+.vscode
+
+# Cargo
+/target
+
+# Ignore everything except example assets
+assets/*
+!assets/config.example.yaml

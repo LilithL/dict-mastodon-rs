@@ -1,0 +1,17 @@
+# The information we save about the api access to the fediverse (tokens, urls and more)
+mastodon:
+  client_id: SuperSecretToken
+  client_secret: SuperSecretToken
+  token: SuperSecretToken
+  base: https://example.com
+  redirect: https://example.com/redirect
+
+# Your wordnik api key here
+wordnik:
+  api_token: false
+
+# The path to the local dictionary (relative to the execution path, or you can use an absolute path)
+local_dictionary: ./assets/dictionary.txt
+
+# The word that will be appended to the adjectives.
+appended_word: myWord
