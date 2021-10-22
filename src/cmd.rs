@@ -28,6 +28,7 @@ pub fn get_matches() -> ArgMatches<'static> {
                         .help("The time between each toots (in seconds).")))
 
         .subcommand(SubCommand::with_name("getcred")
+                    .setting(AppSettings::ArgRequiredElseHelp)
                     .about("An helper to connect to an account and retrieve API credentials."))
                     .arg(Arg::with_name("url")
                         .long("url")

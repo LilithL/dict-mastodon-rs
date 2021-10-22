@@ -4,12 +4,11 @@ extern crate rand;
 mod cmd;
 mod masto_bot;
 use masto_bot::{Bot, MastoBot};
-
 use std::process::exit;
 
 fn main() {
     let matches = cmd::get_matches();
-    let bot = Bot::new(matches.value_of("config"));
+    let mut bot = Bot::new(matches.value_of("config"));
 
     match matches.subcommand() {
         ("toot", Some(sub_match)) => {

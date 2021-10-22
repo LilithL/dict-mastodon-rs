@@ -2,10 +2,10 @@ extern crate yaml_rust;
 extern crate elefren;
 extern crate rand;
 use crate::masto_bot::private::MastoBotPrivate;
-use elefren::{helpers::cli, prelude::*, entities::status::Status};
+use elefren::{prelude::*, entities::status::Status};
 use rand::{prelude::IteratorRandom};
 use yaml_rust::{YamlLoader, Yaml};
-use std::{default, fs, io::{BufRead, BufReader}};
+use std::{fs, io::{BufRead, BufReader}};
 
 pub(super) mod private {
     use super::*;
@@ -28,7 +28,7 @@ pub trait MastoBot {
     fn new(path: Option<&str>) -> Bot;
 
     /// Register to a mastodon instance.
-    fn register(&self, url: &str) -> Result<(), elefren::Error>;
+    fn register(&mut self, url: &str) -> Result<(), elefren::Error>;
 
     /// Connect the mastodon bot object with the given configuration parameters.
     /// 
@@ -54,7 +54,7 @@ pub struct Bot{
 
 impl private::MastoBotPrivate for Bot {
     fn read_conf(path: Option<&str>) -> Yaml {
-        if path.is_none() {
+        if path.is_none() || path.eq(&Some("")) {
             panic!("Path not defined !")
         }
 
@@ -76,13 +76,15 @@ impl MastoBot for Bot {
         }
     }
     
-    fn register(&self, url: &str) -> Result<(), elefren::Error> {
+    fn register(&mut self, url: &str) -> Result<(), elefren::Error> {
         let registration = Registration::new(url)
             .client_name("Mastobot")
             .build().expect("An error occured while connecting");
         let url = registration.authorize_url().unwrap();
         println!("Please connect to {} and validate the connection.", url);
-
+        let code = String::from("RETURNED_FROM_BROWSER");
+        self.mastodon = Some(registration.complete(&code).expect("Error while completing the registration"));
+        dbg!(registration);
         Ok(())
     }
 
@@ -98,7 +100,7 @@ impl MastoBot for Bot {
         let word = local_dict.choose(&mut rng)
             .expect("No line found");
         if word.contains("**") {
-            return word.replace("**", "");
+            return word.replace("**", "").replace("\\n", "\n");
         } else {
             return word+" "+self.conf["appended_word"].as_str().unwrap();
         }
@@ -147,13 +149,13 @@ mod test {
         let conf = Bot::read_conf(Some(&path));
         assert_eq!(
             format!("{:?}", conf),
-            "Hash({String(\"mastodon\"): Hash({String(\"client_id\"): String(\"SuperSecretToken\"), String(\"client_secret\"): String(\"SuperSecretToken\"), String(\"token\"): String(\"SuperSecretToken\"), String(\"base\"): String(\"https://example.com\"), String(\"redirect\"): String(\"https://example.com/redirect\")}), String(\"wordnik\"): Hash({String(\"api_token\"): String(\"SuperSecretToken\")}), String(\"local_dictionary\"): String(\"./tests/assets/dictionary.txt\"), String(\"appended_word\"): String(\"myWord\")})"
+            "Hash({String(\"mastodon\"): Hash({String(\"client_id\"): String(\"SuperSecretToken\"), String(\"client_secret\"): String(\"SuperSecretToken\"), String(\"token\"): String(\"SuperSecretToken\"), String(\"base\"): String(\"https://example.com\"), String(\"redirect\"): String(\"https://example.com/redirect\")}), String(\"wordnik\"): Hash({String(\"api_token\"): Boolean(false)}), String(\"local_dictionary\"): String(\"./tests/assets/dictionary.txt\"), String(\"appended_word\"): String(\"myWord\")})"
         );
     }
 
     #[test]
     fn test_conf_example() {
-        let conf_path = format!("{}/assets/config.yaml.example", env!("CARGO_MANIFEST_DIR"));
+        let conf_path = format!("{}/assets/config.example.yaml", env!("CARGO_MANIFEST_DIR"));
         Bot::new(Some(&conf_path));
     }
 
