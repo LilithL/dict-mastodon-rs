@@ -1,4 +1,5 @@
 mastodon:
+  app_name: Test2_app
   client_id: SuperSecretToken
   client_secret: SuperSecretToken
   token: SuperSecretToken

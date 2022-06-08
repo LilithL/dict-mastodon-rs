@@ -7,3 +7,6 @@
 # Ignore everything except example assets
 assets/*
 !assets/config.example.yaml
+
+# Ignore local stuff like .env.local
+*.local

@@ -1,39 +1,27 @@
 extern crate clap;
-use clap::{Arg, App, SubCommand, ArgMatches, AppSettings};
+use clap::{arg, ArgMatches, Command};
 
-pub fn get_matches() -> ArgMatches<'static> {
-    return App::new("lesbBot")
-        .version(env!("CARGO_PKG_VERSION"))
-        .author("Lilith")
-        .about("The core program of lesbianBot. Rust edition !")
-        .arg(Arg::with_name("config")
-            .short("c")
-            .long("config")
-            .takes_value(true)
-            .default_value("./config.yaml")
-            .help("The path to the configuration file."))
+pub fn get_matches() -> ArgMatches {
+    return Command::new(env!("CARGO_PKG_NAME"))
+        .arg_required_else_help(true)
+        .version(concat!("v", env!("CARGO_PKG_VERSION")))
+        .author(env!("CARGO_PKG_AUTHORS"))
+        .about(env!("CARGO_PKG_DESCRIPTION"))
+        .arg(arg!([CONFIG] "The path to the configuration file.")
+            .default_value("./config.yaml"))
 
-        .subcommand(SubCommand::with_name("toot")
-                    .about("Generate a toot and print it in the console.")
-                    .arg(Arg::with_name("post")
-                        .short("p")
-                        .long("post")
-                        .help("Post the generated toot.")))
+        .subcommand(Command::new("toot")
+                    .about("Generate a toot and print it in the console (or post it to mastodon if option -p is provided).")
+                    .arg(arg!(-p --post "Post the generated toot.")))
 
-        .subcommand(SubCommand::with_name("loop")
+        .subcommand(Command::new("loop")
                     .about("Generate and toot until the program is terminated. The delay between each toot can be set with the timeout option.")
-                    .arg(Arg::with_name("delay")
-                        .value_name("DELAY")
-                        .default_value("1800")
-                        .help("The time between each toots (in seconds).")))
-
-        .subcommand(SubCommand::with_name("getcred")
-                    .about("An helper to connect to an account and retrieve API credentials."))
-                    .arg(Arg::with_name("url")
-                        .long("url")
-                        .takes_value(true)
-                        .default_value("https://botsin.space")
-                        .help("The instance url on which the app will be registered."))
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+                    .arg(arg!(--delay [DELAY] "The time between each toots (in seconds).")
+                        .default_value("1800")))
+        .subcommand(Command::new("register")
+                    .about("An helper to connect to an account and retrieve API credentials.")
+                    .arg(arg!(<APP_NAME> "The name of the application to register."))
+                    .arg(arg!([URL] "The instance url on which the app will be registered.")
+                        .default_value("https://botsin.space")))
         .get_matches();
 }

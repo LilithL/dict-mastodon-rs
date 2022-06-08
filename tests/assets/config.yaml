@@ -1,4 +1,5 @@
 mastodon:
+  app_name: Test_app
   client_id: SuperSecretToken
   client_secret: SuperSecretToken
   token: SuperSecretToken
@@ -6,7 +7,7 @@ mastodon:
   redirect: https://example.com/redirect
 
 wordnik:
-  api_token: false
+  api_token:
 
 local_dictionary: ./tests/assets/dictionary.txt
 appended_word: myWord
