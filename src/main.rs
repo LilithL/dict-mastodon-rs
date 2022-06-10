@@ -4,7 +4,7 @@ mod cmd;
 mod config;
 
 use std::{
-    fs::{self, File},
+    fs,
     io::{self, BufRead},
     process::exit,
 };
@@ -71,12 +71,15 @@ fn gen_word(conf: &Config) -> Result<String, io::Error> {
     // Choose random word, append space + appended word to it and return the result
     let dict = get_dict_iter(&conf)?;
     let mut word = dict.choose(&mut rng).unwrap()?;
+    if word.contains("**") {
+        return Ok(word.replace("**", ""));
+    }
     word.push(' ');
     word.push_str(conf.appended_word.as_str());
     Ok(word)
 }
 
-fn get_dict_iter(conf: &Config) -> Result<io::Lines<io::BufReader<File>>, io::Error> {
-    let dict_file = File::open(conf.local_dictionary.as_str())?;
+fn get_dict_iter(conf: &Config) -> Result<io::Lines<io::BufReader<fs::File>>, io::Error> {
+    let dict_file = fs::File::open(conf.local_dictionary.as_str())?;
     Ok(io::BufReader::new(dict_file).lines())
 }
