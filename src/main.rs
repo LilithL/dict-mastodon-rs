@@ -2,6 +2,7 @@ extern crate elefren;
 extern crate rand;
 mod cmd;
 mod config;
+mod error;
 
 use std::{
     fs,
@@ -15,7 +16,7 @@ use clap::ArgMatches;
 use config::Config;
 use elefren::{scopes::Scopes, Language, MastodonClient, StatusBuilder};
 use rand::{prelude::IteratorRandom, Rng};
-use wordnik::Client;
+use wordnik::{args::RandomWordArgs, Client};
 
 // This value indicates the chance of usage for the local dictionary (in %).
 const DICT_CHANCE: u8 = 15;
@@ -99,22 +100,28 @@ fn main() {
     }
 }
 
-fn gen_word(conf: &Config) -> Result<String, io::Error> {
+fn gen_word(conf: &Config) -> Result<String, error::Error> {
     let mut rng = rand::thread_rng();
+    let mut word: String;
 
     // Enter condition when wordnik api is not None and the random number we got
     // chooses to use the wordnik provider instead of local file
     if conf.wordnik.api_token.is_some() && rng.gen_range(0..=100) > DICT_CHANCE {
         let client = Client::new(conf.wordnik.api_token.as_ref().unwrap());
-        todo!("Get random word from wordnik api.")
+        let mut args: RandomWordArgs = RandomWordArgs::default();
+        args.include_part_of_speech
+            .push(wordnik::args::PartOfSpeech::Adjective);
+        args.min_length = 3;
+        word = client.random_word_args(&args)?.word;
+    } else {
+        // Choose random word, append space + appended word to it and return the result
+        let dict = get_dict_iter(&conf)?;
+        word = dict.choose(&mut rng).unwrap()?;
+        if word.contains("**") {
+            return Ok(word.replace("**", ""));
+        }
     }
 
-    // Choose random word, append space + appended word to it and return the result
-    let dict = get_dict_iter(&conf)?;
-    let mut word = dict.choose(&mut rng).unwrap()?;
-    if word.contains("**") {
-        return Ok(word.replace("**", ""));
-    }
     word.push(' ');
     word.push_str(conf.appended_word.as_str());
     Ok(word)

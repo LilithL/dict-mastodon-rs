@@ -1,16 +1,16 @@
 [package]
 name = "masto_bot"
 author = "LilithL"
-description = "The core program of lesbianBot. Rust edition !"
+description = "A simple word posting bot. Rust edition !"
 repository = "https://github.com/LilithL/dict-mastodon-rs"
-version = "0.0.1"
+version = "0.9.0"
 edition = "2021"
 publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wordnik = "0.1.2"
+wordnik = {git = "https://github.com/LilithL/wordnik.git", branch= "develop"}
 clap = "3.1.18"
 elefren = "0.22.0"
 serde_yaml = "0.8.24"

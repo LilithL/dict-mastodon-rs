@@ -1,6 +1,7 @@
+use crate::error::Error;
 use elefren::Data;
 use serde::{Deserialize, Serialize};
-use std::{fmt::Display, fs, io::Write};
+use std::{fs, io::Write};
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Config {
@@ -48,35 +49,6 @@ impl Config {
 impl Default for WordnikConf {
     fn default() -> Self {
         Self { api_token: None }
-    }
-}
-
-#[derive(Debug)]
-pub enum Error {
-    SerializationError(serde_yaml::Error),
-    IoError(std::io::Error),
-}
-
-impl Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::SerializationError(err) => write!(f, "{}", err),
-            Self::IoError(err) => write!(f, "{}", err),
-        }
-    }
-}
-
-impl std::error::Error for Error {}
-
-impl From<serde_yaml::Error> for Error {
-    fn from(err: serde_yaml::Error) -> Self {
-        Self::SerializationError(err)
-    }
-}
-
-impl From<std::io::Error> for Error {
-    fn from(err: std::io::Error) -> Self {
-        Self::IoError(err)
     }
 }
 

@@ -4,9 +4,9 @@
 # Cargo
 /target
 
-# Ignore everything except example assets
-assets/*
-!assets/config.example.yaml
+# Ignore config and test assets
+/assets
+config.yaml
 
 # Ignore local stuff like .env.local
 *.local

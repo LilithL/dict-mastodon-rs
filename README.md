@@ -2,7 +2,8 @@
 
 ## Installation
 
-There aren't any release (yet), tho you can clone the project and compile it with `cargo build`.
+You have to compile the compile the project and compile it with `cargo build --release`.
+Check releases to get the source code.
 
 ## Usage
 
@@ -14,13 +15,14 @@ You can either write full sentences by starting the line with `**` like : `**I'm
 
 ## Features
 
-Here are the current feature ~~and upcoming ones~~. This is going to change with time ofc:
+Here are the current feature. This is going to change with time ofc:
 
 - CLI interface with different commands
 - Reading config files and parsing them
 - Reading the dictionary
-- Selecting a random sentence in the dictionary and adding a custom word
-- ~~Register to a mastodon instance and saving the tokens into the config file~~
-- ~~Login on a registered account~~
-- ~~Post a generated sentence~~
-- ~~Post indefinitelly with a custom delay~~
+- Selecting a random sentence or word in the dictionary and adding a custom word
+- Use the wordnik API to fetch extra adjectives
+- Register to a mastodon instance and saving the tokens into the config file
+- Login on a registered account
+- Post a generated sentence
+- Post indefinitelly with a custom delay
